@@ -46,17 +46,17 @@ function assetFor(release: Release | null, platform: Platform): ReleaseAsset | n
 
 const SLIDES: Slide[] = [
   {
-    src: '/screens/repertoire.png',
+    src: `${import.meta.env.BASE_URL}screens/repertoire.png`,
     alt: 'Repertoire heat map showing coverage across delivery modes, assessment and feedback practices',
     caption: 'Map your repertoire — coverage, not labels',
   },
   {
-    src: '/screens/interview.png',
+    src: `${import.meta.env.BASE_URL}screens/interview.png`,
     alt: 'Scenario interview with free-text prompts about real teaching situations',
     caption: 'Scenario prompts that reveal reasoning, not personality',
   },
   {
-    src: '/screens/philosophy.png',
+    src: `${import.meta.env.BASE_URL}screens/philosophy.png`,
     alt: 'Philosophy statement builder with claims linked to evidence',
     caption: 'A first draft where every claim traces to evidence',
   },

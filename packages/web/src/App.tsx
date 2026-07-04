@@ -13,7 +13,14 @@ const APP_TABS: { route: Route; label: string }[] = [
   { route: '/app/philosophy', label: 'Philosophy' },
 ];
 
-function normalise(path: string): Route {
+// '/' in dev/Docker; '/ethos-mirror/' when built for GitHub Pages.
+const BASE = import.meta.env.BASE_URL;
+const BASE_PREFIX = BASE === '/' ? '' : BASE.replace(/\/$/, '');
+
+function normalise(pathname: string): Route {
+  const path = BASE_PREFIX && pathname.startsWith(BASE_PREFIX)
+    ? pathname.slice(BASE_PREFIX.length) || '/'
+    : pathname;
   if (path.startsWith('/app/interview')) return '/app/interview';
   if (path.startsWith('/app/philosophy')) return '/app/philosophy';
   if (path.startsWith('/app')) return '/app/repertoire';
@@ -35,7 +42,7 @@ export default function App() {
 
   const navigate = useCallback((to: Route) => {
     const target = isDesktop && to === '/' ? '/app/repertoire' : to;
-    if (!isDesktop) window.history.pushState(null, '', target);
+    if (!isDesktop) window.history.pushState(null, '', BASE_PREFIX + target);
     setRoute(target);
     window.scrollTo(0, 0);
   }, []);
