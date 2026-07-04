@@ -1,0 +1,30 @@
+# Local / self-hosted deployment. Copy .env.example to .env to configure an LLM.
+# The app is fully usable without one (scaffold mode).
+#
+#   docker compose up -d --build              # app only, bring your own endpoint
+#   docker compose --profile local-ai up -d   # app + local Ollama container
+#     → set LLM_BASE_URL=http://ollama:11434/v1 in .env, then
+#       docker compose exec ollama ollama pull llama3.2
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - LLM_BASE_URL=${LLM_BASE_URL:-}
+      - LLM_MODEL=${LLM_MODEL:-}
+      - LLM_API_KEY=${LLM_API_KEY:-}
+    restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  ollama:
+    image: ollama/ollama:latest
+    profiles: [local-ai]
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  ollama-data:

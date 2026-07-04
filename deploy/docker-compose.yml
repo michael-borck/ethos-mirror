@@ -1,0 +1,20 @@
+# Production deployment on a VPS: pulls the prebuilt image, no source needed.
+# Copy this file plus a .env (see .env.example in the repo root) to the server.
+# Assumes an external reverse proxy (e.g. Caddy) on the caddy_default network.
+
+services:
+  app:
+    image: ghcr.io/michael-borck/ethos-mirror:latest
+    environment:
+      - LLM_BASE_URL=${LLM_BASE_URL:-}
+      - LLM_MODEL=${LLM_MODEL:-}
+      - LLM_API_KEY=${LLM_API_KEY:-}
+    restart: unless-stopped
+    networks:
+      - caddy_default
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+networks:
+  caddy_default:
+    external: true

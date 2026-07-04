@@ -1,0 +1,25 @@
+{
+  "name": "ethos-mirror",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Teaching reflection and philosophy builder — map your repertoire, compare stated values against enacted practice, build an evidence-grounded teaching philosophy statement.",
+  "license": "MIT",
+  "author": "Michael Borck",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build:core && npm run build:server && npm run build:web",
+    "build:core": "npm run build --workspace packages/core",
+    "build:server": "npm run build --workspace packages/server",
+    "build:web": "npm run build --workspace packages/web",
+    "dev:server": "npm run dev --workspace packages/server",
+    "dev:web": "npm run dev --workspace packages/web",
+    "start": "node packages/server/dist/index.js",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
