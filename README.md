@@ -67,6 +67,17 @@ docker compose up -d app
 
 For a VPS behind a reverse proxy, use `deploy/docker-compose.yml`, which pulls the prebuilt image `ghcr.io/michael-borck/ethos-mirror:latest` (published automatically from `main` and version tags).
 
+## Desktop app (Tauri)
+
+A native Mac/Windows/Linux app for full data governance: no server at all, reflections stay on the device, and the AI endpoint (base URL / model / key) is entered in-app — a local Ollama keeps everything on the machine. Installers are published to GitHub Releases on version tags; the landing page offers the right one per platform.
+
+```bash
+npm run desktop:dev     # run the desktop shell against the Vite dev server
+npm run desktop:build   # build installers for this platform
+```
+
+Building requires a Rust toolchain. If the repo lives on an exFAT/external volume, set `CARGO_TARGET_DIR` to an internal-disk path first — macOS AppleDouble (`._*`) files inside `target/` break Tauri's build script otherwise.
+
 ## Configuration
 
 Ethos Mirror talks to **any OpenAI-compatible chat completions endpoint** — one code path covers Ollama, OpenRouter, OpenAI, LM Studio and friends. Unset = the app runs in scaffold mode (fully functional, no AI).
@@ -83,25 +94,27 @@ Ethos Mirror talks to **any OpenAI-compatible chat completions endpoint** — on
 ```
 packages/
   core/     shared engine: taxonomy, scenarios, statement assembly, LLM client
-  web/      React + Vite SPA (landing page + app)
+  web/      React + Vite SPA (landing page + app, desktop-aware)
   server/   Express API — stateless LLM proxy, serves web/dist in production
+src-tauri/  Tauri desktop shell (no Rust logic — just the window)
 deploy/     production compose file (prebuilt image, no source)
 docs/       concept document
 ```
 
-`core` is plain browser-compatible TypeScript with zero runtime dependencies, so a future downloadable desktop version (Electron or Tauri — Tauri is attractive here since there is no Node-only machinery to bundle) can reuse it directly for full local data governance.
+`core` is plain browser-compatible TypeScript with zero runtime dependencies — the desktop app reuses it directly in the webview, which is why the Tauri shell needs no backend process at all.
 
 ## Roadmap
 
 - **Phase 1 (this)**: repertoire heat map with explainers, scenario interview, philosophy first-draft builder with claim-to-evidence links, Markdown export
-- **Phase 2**: reflection journal, Lesson Loom plan-corpus analysis, stated-vs-enacted tension reports, living-document re-checks, desktop app
+- **Phase 1.5 (done)**: Tauri desktop app with in-app BYOK AI settings
+- **Phase 2**: reflection journal, Lesson Loom plan-corpus analysis, stated-vs-enacted tension reports, living-document re-checks
 - **Phase 3**: student and peer lens imports, AdvanceHE PSF / AITSL mapping, purpose-specific renders (promotion, award, fellowship)
 
 Grounded in Brookfield's four lenses, Schön's reflection-on-action, and Kolb's cycle — see [docs/concept.md](docs/concept.md).
 
 ## Technology
 
-TypeScript everywhere · React 18 + Vite (web) · Express 5 (server) · zustand + localStorage (state) · any OpenAI-compatible LLM, optional · Docker + GHCR (deploy)
+TypeScript everywhere · React 18 + Vite (web) · Express 5 (server) · Tauri 2 (desktop) · zustand + localStorage (state) · any OpenAI-compatible LLM, optional · Docker + GHCR (deploy)
 
 ## Licence
 

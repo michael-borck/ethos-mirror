@@ -11,6 +11,7 @@ import {
 } from '@ethos-mirror/core';
 import { builderInput, useMirrorStore } from '../store';
 import { fetchLlmStatus, requestAiDraft, type LlmStatus } from '../api';
+import { isDesktop } from '../desktop';
 
 export default function PhilosophyPage() {
   const entries = useMirrorStore((s) => s.entries);
@@ -19,15 +20,24 @@ export default function PhilosophyPage() {
   const setDraft = useMirrorStore((s) => s.setDraft);
   const updateSectionBody = useMirrorStore((s) => s.updateSectionBody);
 
-  const [llm, setLlm] = useState<LlmStatus | null>(null);
+  const llmConfig = useMirrorStore((s) => s.llmConfig);
+  const [serverLlm, setServerLlm] = useState<LlmStatus | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isDesktop) return;
     fetchLlmStatus()
-      .then(setLlm)
-      .catch(() => setLlm({ configured: false, model: null }));
+      .then(setServerLlm)
+      .catch(() => setServerLlm({ configured: false, model: null }));
   }, []);
+
+  const llm: LlmStatus | null = isDesktop
+    ? {
+        configured: Boolean(llmConfig?.baseUrl && llmConfig?.model),
+        model: llmConfig?.baseUrl && llmConfig.model ? llmConfig.model : null,
+      }
+    : serverLlm;
 
   const input = builderInput({ entries, answers });
   const mappedCount = input.entries.length;
@@ -75,6 +85,7 @@ export default function PhilosophyPage() {
       </div>
 
       <section className="builder-status">
+        {isDesktop && <DesktopAiSettings />}
         <div className="status-row">
           <span className="stat">
             <strong>{mappedCount}</strong> / {ITEMS.length} repertoire items mapped
@@ -150,6 +161,60 @@ export default function PhilosophyPage() {
         </>
       )}
     </div>
+  );
+}
+
+function DesktopAiSettings() {
+  const llmConfig = useMirrorStore((s) => s.llmConfig);
+  const setLlmConfig = useMirrorStore((s) => s.setLlmConfig);
+
+  const update = (patch: Partial<{ baseUrl: string; model: string; apiKey: string }>) => {
+    const next = {
+      baseUrl: llmConfig?.baseUrl ?? '',
+      model: llmConfig?.model ?? '',
+      apiKey: llmConfig?.apiKey,
+      ...patch,
+    };
+    setLlmConfig(next.baseUrl || next.model || next.apiKey ? next : null);
+  };
+
+  return (
+    <details className="ai-settings" open={!llmConfig}>
+      <summary>AI settings — bring your own endpoint</summary>
+      <div className="ai-settings-fields">
+        <label>
+          Base URL
+          <input
+            type="text"
+            value={llmConfig?.baseUrl ?? ''}
+            onChange={(e) => update({ baseUrl: e.target.value.trim() })}
+            placeholder="http://localhost:11434/v1 (local Ollama)"
+          />
+        </label>
+        <label>
+          Model
+          <input
+            type="text"
+            value={llmConfig?.model ?? ''}
+            onChange={(e) => update({ model: e.target.value.trim() })}
+            placeholder="llama3.2"
+          />
+        </label>
+        <label>
+          API key (optional)
+          <input
+            type="password"
+            value={llmConfig?.apiKey ?? ''}
+            onChange={(e) => update({ apiKey: e.target.value.trim() })}
+            placeholder="not needed for Ollama"
+          />
+        </label>
+      </div>
+      <p className="ai-settings-note">
+        Any OpenAI-compatible endpoint works: a local Ollama keeps everything on this machine;
+        OpenRouter offers free-tier hosted models. Settings are stored only on this device.
+      </p>
+    </details>
   );
 }
 

@@ -17,9 +17,16 @@
     "dev:server": "npm run dev --workspace packages/server",
     "dev:web": "npm run dev --workspace packages/web",
     "start": "node packages/server/dist/index.js",
+    "tauri": "tauri",
+    "clean:appledouble": "find . -name '._*' -not -path './node_modules/*' -delete",
+    "desktop:dev": "npm run clean:appledouble && tauri dev",
+    "desktop:build": "npm run clean:appledouble && tauri build",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4"
   }
 }

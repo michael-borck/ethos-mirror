@@ -7,6 +7,7 @@ maybeSeedDemo();
 import type {
   BuilderInput,
   InterviewAnswer,
+  LlmConfig,
   PhilosophyDraft,
   RepertoireEntry,
   RepertoireStatus,
@@ -16,6 +17,9 @@ interface MirrorState {
   entries: Record<string, RepertoireEntry>;
   answers: Record<string, InterviewAnswer>;
   draft: PhilosophyDraft | null;
+  /** Desktop (BYOK) mode only — the web app gets its LLM from the server. */
+  llmConfig: LlmConfig | null;
+  setLlmConfig: (config: LlmConfig | null) => void;
   setStatus: (itemId: string, status: RepertoireStatus) => void;
   clearStatus: (itemId: string) => void;
   setEntryNote: (itemId: string, note: string) => void;
@@ -31,6 +35,8 @@ export const useMirrorStore = create<MirrorState>()(
       entries: {},
       answers: {},
       draft: null,
+      llmConfig: null,
+      setLlmConfig: (llmConfig) => set({ llmConfig }),
       setStatus: (itemId, status) =>
         set((s) => ({
           entries: {

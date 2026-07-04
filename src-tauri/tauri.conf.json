@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Ethos Mirror",
+  "version": "0.1.0",
+  "identifier": "com.michaelborck.ethosmirror",
+  "build": {
+    "frontendDist": "../packages/web/dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev:web",
+    "beforeBuildCommand": "npm run build:core && npm run build:web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Ethos Mirror",
+        "width": 1320,
+        "height": 880,
+        "minWidth": 900,
+        "minHeight": 620,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Education",
+    "shortDescription": "Teaching reflection and philosophy builder",
+    "longDescription": "Map your teaching repertoire, answer scenario prompts, and build an evidence-grounded teaching philosophy statement. All reflection data stays on your device; bring your own AI endpoint or run fully local with Ollama.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

@@ -16,50 +16,27 @@ export default function ScreenshotSlider({ slides }: { slides: Slide[] }) {
     return () => clearInterval(t);
   }, [paused, slides.length]);
 
-  const go = (i: number) => setIndex((i + slides.length) % slides.length);
-
   return (
     <div
       className="slider"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="slider-frame">
-        <div className="slider-chrome" aria-hidden>
-          <i />
-          <i />
-          <i />
-        </div>
-        <div className="slider-viewport">
-          {slides.map((slide, i) => (
-            <img
-              key={slide.src}
-              src={slide.src}
-              alt={slide.alt}
-              className={i === index ? 'active' : ''}
-              loading={i === 0 ? 'eager' : 'lazy'}
-            />
-          ))}
-        </div>
-      </div>
-      <div className="slider-controls">
-        <button aria-label="Previous screenshot" onClick={() => go(index - 1)}>
-          ‹
-        </button>
-        <span className="slider-caption">{slides[index].caption}</span>
-        <button aria-label="Next screenshot" onClick={() => go(index + 1)}>
-          ›
-        </button>
-      </div>
+      {slides.map((slide, i) => (
+        <figure key={slide.src} className={`slide${i === index ? ' active' : ''}`}>
+          <img src={slide.src} alt={slide.alt} loading={i === 0 ? 'eager' : 'lazy'} />
+          <figcaption>{slide.caption}</figcaption>
+        </figure>
+      ))}
       <div className="slider-dots" role="tablist" aria-label="Screenshots">
-        {slides.map((s, i) => (
+        {slides.map((slide, i) => (
           <button
-            key={s.src}
+            key={slide.src}
             role="tab"
             aria-selected={i === index}
-            aria-label={s.caption}
-            className={i === index ? 'active' : ''}
-            onClick={() => go(i)}
+            aria-label={slide.caption}
+            className={`slider-dot${i === index ? ' active' : ''}`}
+            onClick={() => setIndex(i)}
           />
         ))}
       </div>

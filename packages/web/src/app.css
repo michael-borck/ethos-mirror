@@ -342,6 +342,51 @@
   box-shadow: var(--shadow-sm);
 }
 
+.ai-settings {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-4);
+  background: var(--paper);
+}
+
+.ai-settings summary {
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  color: var(--accent-dark);
+}
+
+.ai-settings-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+.ai-settings-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.ai-settings-fields input {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.45rem 0.6rem;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.ai-settings-note {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: var(--sp-3) 0 0;
+}
+
 .status-row {
   display: flex;
   gap: var(--sp-4);

@@ -3,6 +3,7 @@ import LandingPage from './pages/LandingPage';
 import RepertoirePage from './pages/RepertoirePage';
 import InterviewPage from './pages/InterviewPage';
 import PhilosophyPage from './pages/PhilosophyPage';
+import { isDesktop } from './desktop';
 
 export type Route = '/' | '/app/repertoire' | '/app/interview' | '/app/philosophy';
 
@@ -20,17 +21,22 @@ function normalise(path: string): Route {
 }
 
 export default function App() {
-  const [route, setRoute] = useState<Route>(() => normalise(window.location.pathname));
+  // Desktop has no landing page and no URL bar: route purely in memory.
+  const [route, setRoute] = useState<Route>(() =>
+    isDesktop ? '/app/repertoire' : normalise(window.location.pathname),
+  );
 
   useEffect(() => {
+    if (isDesktop) return;
     const onPop = () => setRoute(normalise(window.location.pathname));
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
   const navigate = useCallback((to: Route) => {
-    window.history.pushState(null, '', to);
-    setRoute(to);
+    const target = isDesktop && to === '/' ? '/app/repertoire' : to;
+    if (!isDesktop) window.history.pushState(null, '', target);
+    setRoute(target);
     window.scrollTo(0, 0);
   }, []);
 
@@ -63,8 +69,9 @@ export default function App() {
         {route === '/app/philosophy' && <PhilosophyPage />}
       </main>
       <footer className="app-footer">
-        Your reflection data lives only in this browser (localStorage). Nothing is stored on the
-        server.
+        {isDesktop
+          ? 'Your reflection data lives only on this device. Nothing is sent anywhere except the AI endpoint you configure.'
+          : 'Your reflection data lives only in this browser (localStorage). Nothing is stored on the server.'}
       </footer>
     </div>
   );
