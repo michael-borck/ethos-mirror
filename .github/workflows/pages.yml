@@ -32,11 +32,13 @@ jobs:
 
       - run: npm run build:core
 
-      - name: Build web app for Pages subpath
-        run: npm run build --workspace packages/web -- --base=/ethos-mirror/
+      # Custom domain (ethosmirror.eduserver.au) serves from the root,
+      # so build with base '/' (was '/ethos-mirror/' for the github.io subpath).
+      - name: Build web app for Pages
+        run: npm run build --workspace packages/web -- --base=/
 
       # SPA fallback: Pages serves 404.html for unknown paths, so deep links
-      # like /ethos-mirror/app/interview load the app and the router takes over.
+      # like /app/interview load the app and the router takes over.
       - run: cp packages/web/dist/index.html packages/web/dist/404.html
 
       - uses: actions/configure-pages@v5

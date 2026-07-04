@@ -13,7 +13,7 @@ const APP_TABS: { route: Route; label: string }[] = [
   { route: '/app/philosophy', label: 'Philosophy' },
 ];
 
-// '/' in dev/Docker; '/ethos-mirror/' when built for GitHub Pages.
+// Vite's --base flag: '/' everywhere now that Pages serves the custom domain root.
 const BASE = import.meta.env.BASE_URL;
 const BASE_PREFIX = BASE === '/' ? '' : BASE.replace(/\/$/, '');
 

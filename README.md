@@ -4,7 +4,7 @@
 
 A reflection instrument for educators: map your real teaching repertoire, surface tensions between what you value and what you do, and build a teaching philosophy statement grounded in evidence — for promotion, teaching awards and fellowship applications, without the blank page.
 
-**Try it now: https://michael-borck.github.io/ethos-mirror/** — runs entirely in your browser (GitHub Pages, no server). Everything works except AI drafting, which needs the desktop app or a self-hosted instance with an LLM configured; without one the builder uses scaffold mode.
+**Try it now: https://ethosmirror.eduserver.au/** — runs entirely in your browser (GitHub Pages, no server). Everything works except AI drafting, which needs the desktop app or a self-hosted instance with an LLM configured; without one the builder uses scaffold mode.
 
 ![Repertoire heat map](packages/web/public/screens/repertoire.png)
 
